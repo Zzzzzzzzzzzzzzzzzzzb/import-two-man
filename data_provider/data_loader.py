@@ -327,7 +327,7 @@ class Dataset_Tide_Pred(Dataset):
         self.scale = scale
         self.timeenc = timeenc
         self.freq = freq
-        self.N = enc_in
+        self.N = N
 
         self.root_path = root_path
         self.data_path = data_path
