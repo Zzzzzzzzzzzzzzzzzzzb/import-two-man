@@ -51,6 +51,7 @@ class Dataset_Custom(Dataset):
         if self.features == 'S':
             cols.remove(self.target)
         cols.remove('date')
+        cols.remove('id')
 
         if self.features == 'M' or self.features == 'MS':
             df_raw = df_raw[['date'] + cols]
