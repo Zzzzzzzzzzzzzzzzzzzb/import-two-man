@@ -124,7 +124,7 @@ class Exp_Main(Exp_Basic):
         path = self.args.root_path + self.args.data_path
         df = pd.read_csv(path)
         res = []
-        if 'Tide' in self.args.model:
+        if self.args.if_id_or_not:
             id = df.drop_duplicates(subset=['id'])
             id = list(id['id'])
             for i in id:

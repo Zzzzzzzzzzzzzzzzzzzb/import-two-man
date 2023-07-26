@@ -14,7 +14,7 @@ warnings.filterwarnings('ignore')
 
 class Dataset_Custom(Dataset):
     def __init__(self, root_path, size=None,
-                 features='MS', data_path='ETTh1.csv',enc_in=-1,
+                 features='MS', data_path='ETTh1.csv', N=-1,
                  target='OT', scale=True, timeenc=1, freq='1D', index=None):
         # size [seq_len, label_len, pred_len]
         # info
@@ -110,7 +110,7 @@ class Dataset_Custom(Dataset):
 
 class Dataset_Tide(Dataset):
     def __init__(self, root_path, size=None,
-                 features='MS', data_path='ETTh1.csv',enc_in=-1,
+                 features='MS', data_path='ETTh1.csv', N=-1,
                  target='OT', scale=True, timeenc=1, freq='1D', index=None):
         # size [seq_len, label_len, pred_len]
         # info
@@ -128,7 +128,7 @@ class Dataset_Tide(Dataset):
         self.scale = scale
         self.timeenc = timeenc
         self.freq = freq
-        self.N = enc_in
+        self.N = N
 
         self.root_path = root_path
         self.data_path = data_path
@@ -191,7 +191,7 @@ class Dataset_Tide(Dataset):
 
 class Dataset_Pred(Dataset):
     def __init__(self, root_path, flag='pred', size=None,
-                 features='S', data_path='ETTh1.csv',enc_in=-1,
+                 features='S', data_path='ETTh1.csv', N=-1,
                  target='OT', scale=True, inverse=False,
                  timeenc=1, freq='1D', cols=None, index=None):
         # size [seq_len, label_len, pred_len]
@@ -309,7 +309,7 @@ class Dataset_Pred(Dataset):
 
 class Dataset_Tide_Pred(Dataset):
     def __init__(self, root_path, size=None,
-                 features='M', data_path='ETTh1.csv', enc_in=-1,
+                 features='M', data_path='ETTh1.csv', N=-1,
                  target='OT', scale=True, timeenc=1, freq='1D', index=None, cols=None):
         # size [seq_len, label_len, pred_len]
         # info

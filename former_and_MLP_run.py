@@ -25,7 +25,7 @@ def main():
     parser.add_argument('--data', type=str, default='Tide', help='dataset type')
     parser.add_argument('--root_path', type=str, default='data/', help='root path of the data file')
     parser.add_argument('--data_path', type=str, default='train_and_covariates_2.csv', help='data file')
-
+    parser.add_argument('--if_id_or_not', type=int, default=1, help='if exist id in columns')
     parser.add_argument('--features', type=str, default='M',
                         help='forecasting task, options:[M, S, MS]; M:multivariate predict multivariate, S:univariate predict univariate, MS:multivariate predict univariate')
     parser.add_argument('--target', type=str, default='rrp', help='target feature in S or MS task')
@@ -64,6 +64,7 @@ def main():
     # TiDE
     parser.add_argument('--L', type=int, default=10, help='encoder input size')
     parser.add_argument('--H', type=int, default=10, help='encoder input size')
+    parser.add_argument('--N', type=int, default=9, help='encoder input size')
     parser.add_argument('--r', type=int, default=15, help='encoder input size')
     parser.add_argument('--r_hat', type=int, default=10, help='encoder input size')
     parser.add_argument('--p', type=int, default=4, help='encoder input size')
