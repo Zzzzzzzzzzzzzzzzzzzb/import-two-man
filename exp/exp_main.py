@@ -332,25 +332,25 @@ class Exp_Main(Exp_Basic):
         trues = np.concatenate(trues, axis=0)
         inputx = np.concatenate(inputx, axis=0)
 
-        # result save
-        df_pred = pd.DataFrame()
-        for i in range(len(test_index)):
-            print(f'============ {i} ============')
-            date_range = list(test_data.time_stamp.iloc[test_index[i]+self.args.seq_len: test_index[i]+self.args.seq_len+self.args.pred_len, 0])
-            date_range = np.transpose([date_range])
-            id = np.transpose([[test_data.attributes[test_index[i]]] * self.args.pred_len])
-            temp = pd.DataFrame(
-                np.append(np.append(date_range, id, axis=1), preds[i], axis=1),
-                columns=test_data.cols)
-            df_pred = pd.concat([df_pred, temp]).reset_index(drop=True)
+        # result save ======================================================================
+        # df_pred = pd.DataFrame()
+        # for i in range(len(test_index)):
+        #     print(f'============ {i} ============')
+        #     date_range = list(test_data.time_stamp.iloc[test_index[i]+self.args.seq_len: test_index[i]+self.args.seq_len+self.args.pred_len, 0])
+        #     date_range = np.transpose([date_range])
+        #     id = np.transpose([[test_data.attributes[test_index[i]]] * self.args.pred_len])
+        #     temp = pd.DataFrame(
+        #         np.append(np.append(date_range, id, axis=1), preds[i], axis=1),
+        #         columns=test_data.cols)
+        #     df_pred = pd.concat([df_pred, temp]).reset_index(drop=True)
+        #
+        # folder_path = f'./results/' + setting + '/'
+        # if not os.path.exists(folder_path):
+        #     os.makedirs(folder_path)
+        # df_pred.to_csv(folder_path + 'real_prediction.csv', index=False)
 
-        folder_path = f'./results/' + setting + '/'
-        if not os.path.exists(folder_path):
-            os.makedirs(folder_path)
-        df_pred.to_csv(folder_path + 'real_prediction.csv', index=False)
-
-        mae, mse, rmse, mape, mspe, rse, corr = metric(preds, trues)
-        print('mse:{}, mae:{}'.format(mse, mae))
+        mae, mse, rmse, mape, mspe, rse, corr, wmape = metric(preds, trues)
+        print('mse:{}, mae:{}, wmape:{}'.format(mse, mae, wmape))
         f = open("result.txt", 'a')
         f.write(setting + "  \n")
         f.write('mse:{}, mae:{}, rse:{}, corr:{}'.format(mse, mae, rse, corr))
@@ -358,8 +358,8 @@ class Exp_Main(Exp_Basic):
         f.write('\n')
         f.close()
 
-        np.save(folder_path + 'pred.npy', preds)
-        np.save(folder_path + 'true.npy', trues)
+        # np.save(folder_path + 'pred.npy', preds)
+        # np.save(folder_path + 'true.npy', trues)
         return
 
     def predict(self, setting, load=False):
@@ -441,7 +441,7 @@ class Exp_Main(Exp_Basic):
         folder_path = './results/'
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
-        df_pred.to_csv(folder_path + 'predict.csv', index=False)
+        df_pred.to_csv(folder_path + f'{self.args.model_id}_predict.csv', index=False)
 
         return
 

@@ -16,15 +16,15 @@ def main():
     parser = argparse.ArgumentParser(description='Autoformer & Transformer family for Time Series Forecasting')
 
     # basic config
-    parser.add_argument('--is_training', type=int, default=0, help='status')
-    parser.add_argument('--model_id', type=str, default='test', help='model id')
+    parser.add_argument('--is_training', type=int, default=1, help='status')
+    parser.add_argument('--model_id', type=str, default='test_0726', help='model id')
     parser.add_argument('--model', type=str, default='Tide',
                         help='model name, options: [Autoformer, Informer, Transformer, DLinear, DLL]')
 
     # data loader
     parser.add_argument('--data', type=str, default='Tide', help='dataset type')
-    parser.add_argument('--root_path', type=str, default='data/tianchi/', help='root path of the data file')
-    parser.add_argument('--data_path', type=str, default='for_predict.csv', help='data file')
+    parser.add_argument('--root_path', type=str, default='data/', help='root path of the data file')
+    parser.add_argument('--data_path', type=str, default='train_and_covariates_2.csv', help='data file')
 
     parser.add_argument('--features', type=str, default='M',
                         help='forecasting task, options:[M, S, MS]; M:multivariate predict multivariate, S:univariate predict univariate, MS:multivariate predict univariate')
@@ -34,17 +34,17 @@ def main():
     parser.add_argument('--checkpoints', type=str, default='checkpoints/', help='location of model checkpoints')
 
     # forecasting task
-    parser.add_argument('--seq_len', type=int, default=30, help='input sequence length')
-    parser.add_argument('--label_len', type=int, default=20, help='start token length')
+    parser.add_argument('--seq_len', type=int, default=10, help='input sequence length')
+    parser.add_argument('--label_len', type=int, default=10, help='start token length')
     parser.add_argument('--pred_len', type=int, default=10, help='prediction sequence length')
 
     # DLinear
     parser.add_argument('--individual', action='store_true', default=True, help='DLinear: a linear layer for each variate(channel) individually')
     # Formers
     parser.add_argument('--embed_type', type=int, default=1, help='0: default 1: value embedding + temporal embedding + positional embedding 2: value embedding + temporal embedding 3: value embedding + positional embedding 4: value embedding')
-    parser.add_argument('--enc_in', type=int, default=11, help='encoder input size')
-    parser.add_argument('--dec_in', type=int, default=11, help='decoder input size')
-    parser.add_argument('--c_out', type=int, default=11, help='output size')
+    parser.add_argument('--enc_in', type=int, default=9, help='encoder input size')
+    parser.add_argument('--dec_in', type=int, default=9, help='decoder input size')
+    parser.add_argument('--c_out', type=int, default=9, help='output size')
     parser.add_argument('--d_model', type=int, default=512, help='dimension of model')
     parser.add_argument('--n_heads', type=int, default=8, help='num of heads')
     parser.add_argument('--e_layers', type=int, default=2, help='num of encoder layers')
@@ -62,10 +62,10 @@ def main():
     parser.add_argument('--output_attention', action='store_true', help='whether to output attention in ecoder')
 
     # TiDE
-    parser.add_argument('--L', type=int, default=30, help='encoder input size')
+    parser.add_argument('--L', type=int, default=10, help='encoder input size')
     parser.add_argument('--H', type=int, default=10, help='encoder input size')
     parser.add_argument('--r', type=int, default=15, help='encoder input size')
-    parser.add_argument('--r_hat', type=int, default=5, help='encoder input size')
+    parser.add_argument('--r_hat', type=int, default=10, help='encoder input size')
     parser.add_argument('--p', type=int, default=4, help='encoder input size')
     parser.add_argument('--hidden_dim', type=int, default=64, help='encoder input size')
     parser.add_argument('--enc_layer_num', type=int, default=2, help='encoder input size')
@@ -77,9 +77,9 @@ def main():
     parser.add_argument('--num_workers', type=int, default=0, help='data loader num workers')
     parser.add_argument('--itr', type=int, default=1, help='experiments times')
     parser.add_argument('--train_epochs', type=int, default=100, help='train epochs')
-    parser.add_argument('--batch_size', type=int, default=64, help='batch size of train input data')
+    parser.add_argument('--batch_size', type=int, default=128, help='batch size of train input data')
     parser.add_argument('--patience', type=int, default=5, help='early stopping patience')
-    parser.add_argument('--learning_rate', type=float, default=0.001, help='optimizer learning rate')
+    parser.add_argument('--learning_rate', type=float, default=0.01, help='optimizer learning rate')
     parser.add_argument('--des', type=str, default='test', help='exp description')
     parser.add_argument('--loss', type=str, default='mse', help='loss function')
     parser.add_argument('--lradj', type=str, default='type1', help='adjust learning rate')

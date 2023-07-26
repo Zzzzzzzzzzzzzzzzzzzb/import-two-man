@@ -221,8 +221,7 @@ class Dataset_Pred(Dataset):
         self.__read_data__()
 
     def __read_data__(self):
-        self.scaler = joblib.load(f'scalar\scalar_{self.data_path[:-16]}')
-        # self.scaler = StandardScaler()
+        self.scaler = joblib.load(f'scalar\scalar_{self.data_path[:-16]}')        # self.scaler = StandardScaler()
         df_raw = pd.read_csv(os.path.join(self.root_path,
                                           self.data_path))
         self.source_index = np.arange(0, len(df_raw)-self.seq_len)
@@ -337,7 +336,7 @@ class Dataset_Tide_Pred(Dataset):
         self.__read_data__()
 
     def __read_data__(self):
-        self.scaler = joblib.load(f'scalar\scalar_train_and_covariates')
+        self.scaler = joblib.load(f'scalar\scalar_train_and_covariates_2')
         df_raw = pd.read_csv(os.path.join(self.root_path,
                                           self.data_path))
         df_raw.fillna(0, inplace=True)
