@@ -151,7 +151,6 @@ class Exp_Main(Exp_Basic):
 
     def train(self, setting):
         self.index = self.get_index_list()
-        a = self.index[-1]
         self.split_len_1 = int(len(self.index)*0.8)
         self.split_len_2 = int(len(self.index)*0.9)
 
