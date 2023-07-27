@@ -15,7 +15,7 @@ from einops import rearrange
 
 
 class ResidualBlock(nn.Module):
-    def __init__(self, in_dim, hidden_dim, out_dim, dropout_rate=0.2):
+    def __init__(self, in_dim, hidden_dim, out_dim, dropout_rate=0.05):
         super(ResidualBlock, self).__init__()
         self.linear_1 = nn.Linear(in_dim, hidden_dim)
         self.linear_2 = nn.Linear(hidden_dim, out_dim)
