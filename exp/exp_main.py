@@ -124,15 +124,39 @@ class Exp_Main(Exp_Basic):
     def get_index_list(self, shuffle=False):
         path = self.args.root_path + self.args.data_path
         df = pd.read_csv(path)
+
+        # 划分时间
+        df['date'] = pd.to_datetime(df['date'])
+        date_range_train = pd.date_range(start='2021-01-04', end='2022-07-22', freq='1D')  # train
+        df_train = df[df['date'].isin(date_range_train)]
+        date_range_vali = pd.date_range(start='2022-07-25', end='2022-09-13', freq='1D')  # vali
+        df_vali = df[df['date'].isin(date_range_vali)]
+        date_range_test = pd.date_range(start='2022-09-10', end='2022-11-09', freq='1D')  # test
+        df_test = df[df['date'].isin(date_range_test)]
+        res_train, res_vali, res_test = [], [], []
+
         res = []
         if self.args.if_id_or_not:
             id = df.drop_duplicates(subset=['id'])
             id = list(id['id'])
             for i in id:
-                temp = df[df['id'] == i]
-                if len(temp) >= self.args.seq_len + self.args.pred_len:
-                    index = list(temp.index)
-                    res += index[:-self.args.pred_len-self.args.seq_len+1]
+                temp_train = df_train[df_train['id'] == i]
+                if len(temp_train) >= self.args.seq_len + self.args.pred_len:
+                    index = list(temp_train.index.values)
+                    res_train += index[:-self.args.pred_len-self.args.seq_len+1]
+
+                temp_vali = df_vali[df_vali['id'] == i]
+                if len(temp_vali) >= self.args.pred_len:
+                    index = list(temp_vali.index.values)
+                    index = index[:-self.args.pred_len + 1]
+                    res_vali += [x - self.args.seq_len for x in index]
+
+                temp_test = df_test[df_test['id'] == i]
+                if len(temp_test) >= self.args.pred_len:
+                    index = list(temp_test.index.values)
+                    index = index[:-self.args.pred_len + 1]
+                    res_test += [x - self.args.seq_len for x in index]
+            res = [res_train, res_vali, res_test]
         else:
             print(f'样本长度为{len(df)}，开始采样 =================================')
             windows_len = self.args.seq_len + self.args.pred_len
@@ -151,13 +175,13 @@ class Exp_Main(Exp_Basic):
 
     def train(self, setting):
         self.index = self.get_index_list()
-        self.split_len_1 = int(len(self.index)*0.8)
-        self.split_len_2 = int(len(self.index)*0.9)
-
-        train_index = self.index[: self.split_len_1]
-        train_data, train_loader = self._get_data(flag='train', index=train_index)
-        vali_index = self.index[self.split_len_1: self.split_len_2]
-        vali_data, vali_loader = self._get_data(flag='val', index=vali_index)
+        # self.split_len_1 = int(len(self.index)*0.8)
+        # self.split_len_2 = int(len(self.index)*0.9)
+        #
+        # train_index = self.index[: self.split_len_1]
+        train_data, train_loader = self._get_data(flag='train', index=self.index[0])
+        # vali_index = self.index[self.split_len_1: self.split_len_2]
+        vali_data, vali_loader = self._get_data(flag='val', index=self.index[1])
 
         path = os.path.join(self.args.checkpoints, setting)
         if not os.path.exists(path):
@@ -265,8 +289,8 @@ class Exp_Main(Exp_Basic):
         self.model.load_state_dict(torch.load(best_model_path))
 
     def test(self, setting, test=1):
-        test_index = self.index[self.split_len_2:]
-        test_data, test_loader = self._get_data(flag='test', index=test_index)
+        # test_index = self.index[self.split_len_2:]
+        test_data, test_loader = self._get_data(flag='test', index=self.index[2])
         
         if test:
             print('loading model')

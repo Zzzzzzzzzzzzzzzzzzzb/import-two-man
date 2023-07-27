@@ -99,6 +99,12 @@ def outlier(path, label_list=[]):
 
 
 if __name__ == '__main__':
-    train_path = 'data/train_and_covariates_DLinear.csv'
-    predict_path = 'data/predict_table.csv'
-    for_predict_DLinear(train_path, predict_path, 14, 10)
+    df = pd.read_csv(r'data/train_and_covariates_2.csv')
+    df['date'] = pd.to_datetime(df['date'])
+    date_range_train = pd.date_range(start='2021-01-04', end='2022-07-22', freq='1D')  # train
+    df_train = df[df['date'].isin(date_range_train)]
+    date_range_vali = pd.date_range(start='2022-07-23', end='2022-09-10', freq='1D')  # vali
+    df_vali = df[df['date'].isin(date_range_vali)]
+    print(len(df_train) / len(df))
+    print(len(df_vali) / len(df))
+    print((len(df) - len(df_train) - len(df_vali)) / len(df))
