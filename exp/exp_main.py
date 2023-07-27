@@ -11,6 +11,7 @@ import pandas as pd
 import torch
 import torch.nn as nn
 from torch import optim
+import random
 
 import os
 import time
@@ -120,7 +121,7 @@ class Exp_Main(Exp_Basic):
         self.model.train()
         return total_loss
 
-    def get_index_list(self):
+    def get_index_list(self, shuffle=False):
         path = self.args.root_path + self.args.data_path
         df = pd.read_csv(path)
         res = []
@@ -144,6 +145,8 @@ class Exp_Main(Exp_Basic):
                 i += 1
                 if i % 10000 == 0:
                     print(f'已采样第{i}个')
+        if shuffle:
+            random.shuffle(res)
         return res
 
     def train(self, setting):
@@ -349,11 +352,11 @@ class Exp_Main(Exp_Basic):
         #     os.makedirs(folder_path)
         # df_pred.to_csv(folder_path + 'real_prediction.csv', index=False)
 
-        mae, mse, rmse, mape, mspe, rse, corr, wmape = metric(preds, trues)
+        mae, mse, rmse, mape, mspe, rse, corr, wmape = metric(preds[:, :, :3], trues[:, :, :3])
         print('mse:{}, mae:{}, wmape:{}'.format(mse, mae, wmape))
         f = open("result.txt", 'a')
         f.write(setting + "  \n")
-        f.write('mse:{}, mae:{}, rse:{}, corr:{}'.format(mse, mae, rse, corr))
+        f.write('mse:{}, mae:{}, wmape:{},rse:{}, corr:{}'.format(mse, mae, wmape, rse, corr))
         f.write('\n')
         f.write('\n')
         f.close()
@@ -367,7 +370,7 @@ class Exp_Main(Exp_Basic):
         if 'Tide' in self.args.model:
             pred_data = Dataset_Tide_Pred(root_path=self.args.root_path, data_path=self.args.data_path, index=self.index,
                                           size=[self.args.seq_len, self.args.label_len, self.args.pred_len],
-                                          freq=self.args.freq, enc_in=self.args.enc_in)
+                                          freq=self.args.freq, N=self.args.enc_in)
             pred_loader = DataLoader(pred_data, batch_size=self.args.batch_size, shuffle=False,
                                                    num_workers=self.args.num_workers, drop_last=False)
         else:

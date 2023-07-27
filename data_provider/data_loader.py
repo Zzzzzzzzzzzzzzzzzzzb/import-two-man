@@ -222,7 +222,7 @@ class Dataset_Pred(Dataset):
         self.__read_data__()
 
     def __read_data__(self):
-        self.scaler = joblib.load(f'scalar\scalar_{self.data_path[:-16]}')        # self.scaler = StandardScaler()
+        self.scaler = joblib.load(f'scalar/scalar_1D')        # self.scaler = StandardScaler()
         df_raw = pd.read_csv(os.path.join(self.root_path,
                                           self.data_path))
         self.source_index = np.arange(0, len(df_raw)-self.seq_len)
@@ -235,14 +235,13 @@ class Dataset_Pred(Dataset):
             cols = list(df_raw.columns)
             self.cols = cols.copy()
             cols.remove('date')
+            cols.remove('id')
         if self.features == 'S':
             cols.remove(self.target)
-        # border1 = len(df_raw) - self.seq_len
-        # border2 = len(df_raw)
 
         if self.features == 'M' or self.features == 'MS':
-            df_raw = df_raw[['date'] + cols]
-            cols_data = df_raw.columns[1:]
+            df_raw = df_raw[['date', 'id'] + cols]
+            cols_data = df_raw.columns[2:]
             df_data = df_raw[cols_data]
         elif self.features == 'S':
             df_raw = df_raw[['date'] + cols + [self.target]]
@@ -274,13 +273,14 @@ class Dataset_Pred(Dataset):
             data_stamp = time_features(pd.to_datetime(df_stamp['date'].values), freq=self.freq)
             data_stamp = data_stamp.transpose(1, 0)
 
-        # self.data_x = data[border1:border2]
+        self.attributes = df_raw.iloc[:, 1].values
+        self.time_stamp = df_stamp[['date']]
+        self.cols = ['date', 'id'] + cols
+
         self.data_x = data
         if self.inverse:
-            # self.data_y = df_data.values[border1:border2]
             self.data_y = df_data.values
         else:
-            # self.data_y = data[border1:border2]
             self.data_y = data
         self.data_stamp = data_stamp
 

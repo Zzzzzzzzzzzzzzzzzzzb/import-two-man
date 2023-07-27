@@ -18,13 +18,13 @@ def main():
     # basic config
     parser.add_argument('--is_training', type=int, default=1, help='status')
     parser.add_argument('--model_id', type=str, default='test_0727', help='model id')
-    parser.add_argument('--model', type=str, default='DLinear',
+    parser.add_argument('--model', type=str, default='Tide',
                         help='model name, options: [Autoformer, Informer, Transformer, DLinear, DLL]')
 
     # data loader
-    parser.add_argument('--data', type=str, default='custom', help='dataset type')
+    parser.add_argument('--data', type=str, default='Tide', help='dataset type')
     parser.add_argument('--root_path', type=str, default='data/', help='root path of the data file')
-    parser.add_argument('--data_path', type=str, default='train_and_covariates_DLinear.csv', help='data file')
+    parser.add_argument('--data_path', type=str, default='train_and_covariates_2.csv', help='data file')
     parser.add_argument('--if_id_or_not', type=int, default=1, help='if exist id in columns')
     parser.add_argument('--features', type=str, default='M',
                         help='forecasting task, options:[M, S, MS]; M:multivariate predict multivariate, S:univariate predict univariate, MS:multivariate predict univariate')
@@ -34,7 +34,7 @@ def main():
     parser.add_argument('--checkpoints', type=str, default='checkpoints/', help='location of model checkpoints')
 
     # forecasting task
-    parser.add_argument('--seq_len', type=int, default=20, help='input sequence length')
+    parser.add_argument('--seq_len', type=int, default=10, help='input sequence length')
     parser.add_argument('--label_len', type=int, default=10, help='start token length')
     parser.add_argument('--pred_len', type=int, default=10, help='prediction sequence length')
 
@@ -135,10 +135,6 @@ def main():
 
             print('>>>>>>>testing : {}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.format(setting))
             exp.test(setting)
-            #
-            # if args.do_predict:
-            #     print('>>>>>>>predicting : {}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.format(setting))
-            #     exp.predict(setting, True)
 
             torch.cuda.empty_cache()
     else:
