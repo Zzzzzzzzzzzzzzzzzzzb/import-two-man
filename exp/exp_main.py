@@ -69,6 +69,7 @@ class Exp_Main(Exp_Basic):
         # criterion = nn.MSELoss()
         criterion = nn.L1Loss()
         # criterion = My_loss()
+        # criterion = nn.HuberLoss()
         return criterion
 
     def vali(self, vali_data, vali_loader, criterion):
@@ -174,7 +175,7 @@ class Exp_Main(Exp_Basic):
         return res
 
     def train(self, setting):
-        self.index = self.get_index_list()
+        self.index = self.get_index_list() 
         # self.split_len_1 = int(len(self.index)*0.8)
         # self.split_len_2 = int(len(self.index)*0.9)
         #
@@ -370,9 +371,9 @@ class Exp_Main(Exp_Basic):
         #         columns=test_data.cols)
         #     df_pred = pd.concat([df_pred, temp]).reset_index(drop=True)
         #
-        # folder_path = f'./results/' + setting + '/'
-        # if not os.path.exists(folder_path):
-        #     os.makedirs(folder_path)
+        folder_path = f'./results/' + setting + '/'
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
         # df_pred.to_csv(folder_path + 'real_prediction.csv', index=False)
 
         mae, mse, rmse, mape, mspe, rse, corr, wmape = metric(preds[:, :, :3], trues[:, :, :3])
@@ -384,8 +385,8 @@ class Exp_Main(Exp_Basic):
         f.write('\n')
         f.close()
 
-        # np.save(folder_path + 'pred.npy', preds)
-        # np.save(folder_path + 'true.npy', trues)
+        np.save(folder_path + 'pred.npy', preds)
+        np.save(folder_path + 'true.npy', trues)
         return
 
     def predict(self, setting, load=False):

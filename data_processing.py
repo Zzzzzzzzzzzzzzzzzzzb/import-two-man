@@ -80,9 +80,10 @@ def for_predict_DLinear(train_path, predict_table_path, enc_in, seq_len):
     result.to_csv(r'data\for_predict_len10_14.csv', index=False)
 
 
-def outlier(path, label_list=[]):
+def outlier(path, label_list=None, id=99):
     df = pd.read_csv(path)
     k = 1
+    df = df[df['id'] == id].reset_index(drop=True)
     for label in label_list:
         plt.subplot(len(label_list), 1, k)
         m = np.mean(df[label])
@@ -92,19 +93,22 @@ def outlier(path, label_list=[]):
             if df.loc[i, label] >= m + 3*std or df.loc[i, label] <= m - std*3:
                 df.loc[i, label] = None
         df[label] = df[label].interpolate('linear')
-        plt.plot(df[label])
+        # plt.plot(df[label])
         k += 1
     plt.show()
-    df.to_csv(r'data/train_and_covariates_linear.csv', index=False)
+    # df.to_csv(r'data/train_and_covariates_linear.csv', index=False)
 
 
 if __name__ == '__main__':
-    df = pd.read_csv(r'data/train_and_covariates_2.csv')
-    df['date'] = pd.to_datetime(df['date'])
-    date_range_train = pd.date_range(start='2021-01-04', end='2022-07-22', freq='1D')  # train
-    df_train = df[df['date'].isin(date_range_train)]
-    date_range_vali = pd.date_range(start='2022-07-23', end='2022-09-10', freq='1D')  # vali
-    df_vali = df[df['date'].isin(date_range_vali)]
-    print(len(df_train) / len(df))
-    print(len(df_vali) / len(df))
-    print((len(df) - len(df_train) - len(df_vali)) / len(df))
+    # df = pd.read_csv(r'data/train_and_covariates_2.csv')
+    # df['date'] = pd.to_datetime(df['date'])
+    # date_range_train = pd.date_range(start='2021-01-04', end='2022-07-22', freq='1D')  # train
+    # df_train = df[df['date'].isin(date_range_train)]
+    # date_range_vali = pd.date_range(start='2022-07-23', end='2022-09-10', freq='1D')  # vali
+    # df_vali = df[df['date'].isin(date_range_vali)]
+    # print(len(df_train) / len(df))
+    # print(len(df_vali) / len(df))
+    # print((len(df) - len(df_train) - len(df_vali)) / len(df))
+    path = 'data/train_and_covariates_2.csv'
+    label_list = ['apply_amt', 'redeem_amt', 'net_in_amt']
+    outlier(path, label_list)
